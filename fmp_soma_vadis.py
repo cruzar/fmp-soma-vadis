@@ -11,7 +11,7 @@ individuais.
  - somaVADs_FFT()
  - somaVADs_hib()
 
-Testado com:  Python version '2.7.13', Numpy version '1.11.3'
+Testado com:  Python version '3.6.1', Numpy version '1.12.1'
 """
 import numpy as np
 
@@ -127,11 +127,11 @@ def somaVADs_FFT(VADs):
             O formato do array de saída é igual ao formato dos arrays de VADs de entrada.
     """
     # Lista das repetições (2os elementos de cada tuplo do input VADs)
-    reps = map(lambda nested: nested[1], VADs)
+    reps = [nested[1] for nested in VADs]
     
     # Lista dos mínimos e máximos do espaço amostral de cada VAD introduzida
-    mins = map(lambda nested: nested[0][:,0].min(), VADs)
-    maxs = map(lambda nested: nested[0][:,0].max(), VADs)
+    mins = [nested[0][:,0].min() for nested in VADs]
+    maxs = [nested[0][:,0].max() for nested in VADs]
     
     # Geram-se todos os valores discretos do espaço amostral completo de
     #  Z = n_1 * VAD_1 + n_2 * VAD_2 + ... + n_i * VAD_i
@@ -140,7 +140,7 @@ def somaVADs_FFT(VADs):
     S_Z = np.arange(SZ_min, SZ_max + 1)
     
     # Obtem-se a Transformada de Fourier Discreta de cada VAD elevada à sua potência
-    TFs = map(lambda nested: np.fft.fft(nested[0][:,1], n=len(S_Z)) ** nested[1], VADs)
+    TFs = [np.fft.fft(nested[0][:,1], n=len(S_Z)) ** nested[1] for nested in VADs]
     
     # Multiplicam-se todas as T.F.
     TF = np.prod(TFs, axis=0)
